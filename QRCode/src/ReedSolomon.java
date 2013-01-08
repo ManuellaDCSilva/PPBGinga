@@ -157,40 +157,46 @@ public class ReedSolomon {
 				 * first case) or the result from XOR 4 Put out the firsts
 				 * coefficients of the above polynomial, if they were 0
 				 */
-				if (eccwblocks < lengthOfBlocks1) {
-					int top = lengthOfBlocks1;
+				int top = lengthOfBlocks1;
+				int mpl1 = 0;
+				int mpl2 = 0;
+				int differ = 0;
 
-					for (int i = 0; i < top; i++) {
-						mp = convertoToAlphaNotation(mp);
-						System.out.println(mp.toString());
-						auxMultiply = multiplyPolynomialByCoefficient(gp,
-								mp.getTerm(mp.length())); // 1
-						System.out.println("auxMultiply "
-								+ auxMultiply.toString());
-						auxXOR = xorPolynomials(
-								convertoToIntegerNotation(auxMultiply),
-								convertoToIntegerNotation(mp)); // 2
-						System.out.println("auxXOR " + auxXOR.toString());
-						mp = getWithoutFirstNonZeroTerms(auxXOR); // 3
-						System.out.println(mp.toString());
+				for (int i = 0; i < top; i++) {
+					mpl1 = mp.length();
+					mp = convertoToAlphaNotation(mp);
+					System.out
+							.println("++++convertoToAlphaNotation(mp): " + mp);
+					auxMultiply = multiplyPolynomialByCoefficient(gp,
+							mp.getTerm(mp.length())); // 1
+					System.out.println("++++coefficient: "
+							+ mp.getTerm(mp.length()));
+					System.out.println("++++multiplyPolynomialByCoefficient: "
+							+ auxMultiply);
+					auxXOR = xorPolynomials(
+							convertoToIntegerNotation(auxMultiply),
+							convertoToIntegerNotation(mp)); // 2
+					System.out.println("++++ " + convertoToIntegerNotation(mp));
+					System.out.println("++++ "
+							+ convertoToIntegerNotation(auxMultiply));
+					System.out.println("++++xorPolynomials: " + auxXOR);
+					mp = getWithoutFirstNonZeroTerms(auxXOR); // 3
+					mpl2 = mp.length();
+					differ = mpl1 - mpl2;
+					System.out.println(mpl1 + " - " + mpl2 + " i: " + i);
+					if (differ > 1) {
+						top -= (differ - 1);
+						System.out.println(">>>> differ: " + differ + ", top: " + top);
+					}else if (differ <= -1){
+						top -= Math.abs(differ);
+						System.out.println(">>>> differ: " + Math.abs(differ) + ", top: " + top);						
 					}
-				} else {
-					int top = lengthOfBlocks1;
-
-					for (int i = 0; i < top; i++) {
-						mp = convertoToAlphaNotation(mp);
-						System.out.println("mp " + mp.toString());
-						auxMultiply = multiplyPolynomialByCoefficient(gp,
-								mp.getTerm(mp.length())); // 1
-						System.out.println("auxMultiply "
-								+ auxMultiply.toString());
-						auxXOR = xorPolynomials(
-								convertoToIntegerNotation(auxMultiply),
-								convertoToIntegerNotation(mp)); // 2
-						System.out.println("auxXOR " + auxXOR.toString());
-						mp = getWithoutFirstNonZeroTerms(auxXOR); // 3
-						System.out.println();
-					}
+					/*
+					 * differ = mpl1-mpl2; top -= differ;
+					 */
+					System.out.println("Polinomio: "
+							+ convertoToAlphaNotation(mp).toString());
+					System.out.println();
 				}// Generate the error correction code block - end
 
 				int length = mp.length();
@@ -230,22 +236,48 @@ public class ReedSolomon {
 					PolynomialVector auxMultiply = null;
 					PolynomialVector auxXOR = null;
 
-					for (int i = 0; i < lengthOfBlocks1; i++) {
+					int top = lengthOfBlocks1;
+					int mpl1 = 0;
+					int mpl2 = 0;
+					int differ = 0;
+
+					for (int i = 0; i < top; i++) {
+						mpl1 = mp.length();
 						mp = convertoToAlphaNotation(mp);
+						System.out
+								.println("++++convertoToAlphaNotation(mp): " + mp);
 						auxMultiply = multiplyPolynomialByCoefficient(gp,
 								mp.getTerm(mp.length())); // 1
+						System.out.println("++++coefficient: "
+								+ mp.getTerm(mp.length()));
+						System.out.println("++++multiplyPolynomialByCoefficient: "
+								+ auxMultiply);
 						auxXOR = xorPolynomials(
 								convertoToIntegerNotation(auxMultiply),
 								convertoToIntegerNotation(mp)); // 2
+						System.out.println("++++ " + convertoToIntegerNotation(mp));
+						System.out.println("++++ "
+								+ convertoToIntegerNotation(auxMultiply));
+						System.out.println("++++xorPolynomials: " + auxXOR);
 						mp = getWithoutFirstNonZeroTerms(auxXOR); // 3
-						System.out.println("Polinomio: "+mp.toString());
+						mpl2 = mp.length();
+						differ = mpl1 - mpl2;
+						System.out.println(mpl1 + " - " + mpl2 + " i: " + i);
+						if (differ > 1) {
+							top -= (differ - 1);
+							System.out.println(">>>> differ: " + differ + ", top: " + top);
+						}else if (differ <= -1){
+							top -= Math.abs(differ);
+							System.out.println(">>>> differ: " + Math.abs(differ) + ", top: " + top);						
+						}
+						/*
+						 * differ = mpl1-mpl2; top -= differ;
+						 */
+						System.out.println("Polinomio: "
+								+ convertoToAlphaNotation(mp).toString());
+						System.out.println();
 					}
-					System.out.println();
-//					System.out.println("Polinomio(f): "
-//							+ convertoToAlphaNotation(mp).toString());
-//					System.out.println();
 
-					System.out.println(eccwblocks);
 					
 					for (int i = 0; i <= eccwblocks - 1; i++) {
 //						System.out.println((eccwblocks*(numOfBlocks1-k )- 1 - i)+" - "+mp.getTerm(eccwblocks-i-1)+" - "+ (eccwblocks-i-1)+ " " + (lengthOfBlocks1-i));
@@ -284,19 +316,47 @@ public class ReedSolomon {
 					PolynomialVector auxMultiply = null;
 					PolynomialVector auxXOR = null;
 
-					for (int i = 0; i < lengthOfBlocks1; i++) {
+					int top = lengthOfBlocks1;
+					int mpl1 = 0;
+					int mpl2 = 0;
+					int differ = 0;
+
+					for (int i = 0; i < top; i++) {
+						mpl1 = mp.length();
 						mp = convertoToAlphaNotation(mp);
-						System.out.println("Polinomio: " + mp.toString());
+						System.out
+								.println("++++convertoToAlphaNotation(mp): " + mp);
 						auxMultiply = multiplyPolynomialByCoefficient(gp,
 								mp.getTerm(mp.length())); // 1
+						System.out.println("++++coefficient: "
+								+ mp.getTerm(mp.length()));
+						System.out.println("++++multiplyPolynomialByCoefficient: "
+								+ auxMultiply);
 						auxXOR = xorPolynomials(
 								convertoToIntegerNotation(auxMultiply),
 								convertoToIntegerNotation(mp)); // 2
+						System.out.println("++++ " + convertoToIntegerNotation(mp));
+						System.out.println("++++ "
+								+ convertoToIntegerNotation(auxMultiply));
+						System.out.println("++++xorPolynomials: " + auxXOR);
 						mp = getWithoutFirstNonZeroTerms(auxXOR); // 3
+						mpl2 = mp.length();
+						differ = mpl1 - mpl2;
+						System.out.println(mpl1 + " - " + mpl2 + " i: " + i);
+						if (differ > 1) {
+							top -= (differ - 1);
+							System.out.println(">>>> differ: " + differ + ", top: " + top);
+						}else if (differ <= -1){
+							top -= Math.abs(differ);
+							System.out.println(">>>> differ: " + Math.abs(differ) + ", top: " + top);						
+						}
+						/*
+						 * differ = mpl1-mpl2; top -= differ;
+						 */
+						System.out.println("Polinomio: "
+								+ convertoToAlphaNotation(mp).toString());
+						System.out.println();
 					}
-					System.out.println("Polinomio(f): "
-							+ convertoToAlphaNotation(mp).toString());
-					System.out.println();
 
 					for (int i = eccwblocks - 1; i >= 0; i--) {
 						result.setTerm(mp.getTerm(eccwblocks - i - 1),
@@ -324,20 +384,49 @@ public class ReedSolomon {
 					PolynomialVector auxMultiply = null;
 					PolynomialVector auxXOR = null;
 
-					System.out.println(gp.toString());
-					for (int j = 0; j < lengthOfBlocks2; j++) {
+					int top = lengthOfBlocks2;
+					int mpl1 = 0;
+					int mpl2 = 0;
+					int differ = 0;
+
+					for (int i = 0; i < top; i++) {
+						mpl1 = mp.length();
 						mp = convertoToAlphaNotation(mp);
-						System.out.println("Polinomio: " + mp.toString());
+						System.out
+								.println("++++convertoToAlphaNotation(mp): " + mp);
 						auxMultiply = multiplyPolynomialByCoefficient(gp,
 								mp.getTerm(mp.length())); // 1
+						System.out.println("++++coefficient: "
+								+ mp.getTerm(mp.length()));
+						System.out.println("++++multiplyPolynomialByCoefficient: "
+								+ auxMultiply);
 						auxXOR = xorPolynomials(
 								convertoToIntegerNotation(auxMultiply),
 								convertoToIntegerNotation(mp)); // 2
+						System.out.println("++++ " + convertoToIntegerNotation(mp));
+						System.out.println("++++ "
+								+ convertoToIntegerNotation(auxMultiply));
+						System.out.println("++++xorPolynomials: " + auxXOR);
 						mp = getWithoutFirstNonZeroTerms(auxXOR); // 3
+						mpl2 = mp.length();
+						differ = mpl1 - mpl2;
+						System.out.println(mpl1 + " - " + mpl2 + " i: " + i);
+						if (differ > 1) {
+							top -= (differ - 1);
+							System.out.println(">>>> differ: " + differ + ", top: " + top);
+						}else if (differ <= -1){
+							top -= Math.abs(differ);
+							System.out.println(">>>> differ: " + Math.abs(differ) + ", top: " + top);						
+						}
+						/*
+						 * differ = mpl1-mpl2; top -= differ;
+						 */
+						System.out.println("Polinomio: "
+								+ convertoToAlphaNotation(mp).toString());
+						System.out.println();
 					}
-					System.out.println("Polinomio(f): "
-							+ convertoToAlphaNotation(mp).toString());
-					System.out.println();
+					System.out.println("Polinomio (f): "
+							+ mp.toString());
 
 					for (int i = eccwblocks - 1; i >= 0; i--) {
 						result.setTerm(mp.getTerm(eccwblocks - i - 1),

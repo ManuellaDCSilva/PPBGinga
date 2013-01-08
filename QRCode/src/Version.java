@@ -229,7 +229,7 @@ public class Version {
 	 * Error Correction code blocks information for each version and ECLevel.
 	 */
 	public static final int[][] numberofErrorCorrectionCodewords = {
-			{ 7, 10, 13, 17 }, { 10, 26, 22, 28 }, { 15, 26, 18, 22 },
+			{ 7, 10, 13, 17 }, { 10, 16, 22, 28 }, { 15, 26, 18, 22 },
 			{ 20, 18, 26, 16 }, { 26, 24, 18, 22 }, { 18, 16, 24, 28 },
 			{ 20, 18, 18, 26 }, { 24, 22, 22, 26 }, { 30, 22, 20, 24 },
 			{ 18, 26, 24, 28 }, { 20, 30, 24, 28 }, { 24, 22, 26, 28 },
