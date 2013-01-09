@@ -137,7 +137,7 @@ final class GenericGFPoly {
     int lengthDiff = largerCoefficients.length - smallerCoefficients.length;
     // Copy high-order terms only found in higher-degree polynomial's coefficients
     System.arraycopy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
-
+    System.out.println("other: " + other.toString());
     for (int i = lengthDiff; i < largerCoefficients.length; i++) {
       sumDiff[i] = GenericGF.addOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
     }
@@ -211,14 +211,25 @@ final class GenericGFPoly {
     int denominatorLeadingTerm = other.getCoefficient(other.getDegree());
     int inverseDenominatorLeadingTerm = field.inverse(denominatorLeadingTerm);
 
+    int i = 0;
     while (remainder.getDegree() >= other.getDegree() && !remainder.isZero()) {
+      System.out.println(remainder.getDegree() + " - " + other.getDegree() + " - " + i);
+      System.out.println("+++other: " + other.toString());
       int degreeDifference = remainder.getDegree() - other.getDegree();
+      
       int scale = field.multiply(remainder.getCoefficient(remainder.getDegree()), inverseDenominatorLeadingTerm);
+
       GenericGFPoly term = other.multiplyByMonomial(degreeDifference, scale);
+      System.out.println("+++other: " + other.toString());
+     
       GenericGFPoly iterationQuotient = field.buildMonomial(degreeDifference, scale);
       quotient = quotient.addOrSubtract(iterationQuotient);
       remainder = remainder.addOrSubtract(term);
       System.out.println("Polinomio: " + remainder.toString());
+      System.out.println("1st: " + (remainder.getDegree() >= other.getDegree()));
+      System.out.println("2nd: " + (!remainder.isZero()));
+      System.out.println();
+      i++;
     }
 
     return new GenericGFPoly[] { quotient, remainder };

@@ -75,7 +75,7 @@ public final class ReedSolomonEncoder {
     info = info.multiplyByMonomial(ecBytes, 1);
     //MANUELLA
     System.out.println("          message polynomial: " + info.toString());
-    
+    System.out.println("          generator polynomial: " + generator.toString());
     GenericGFPoly remainder = info.divide(generator)[1];
     int[] coefficients = remainder.getCoefficients();
     //MANUELLA

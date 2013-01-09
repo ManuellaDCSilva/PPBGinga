@@ -20,7 +20,7 @@ public class QrTest {
 		Encoder encoder = null;
 		try {
 
-			qr = encoder.encode("Hello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello World", level.Q);
+			qr = encoder.encode("Testando", level.H);
 			
 			String aux = qr.toString();
 			

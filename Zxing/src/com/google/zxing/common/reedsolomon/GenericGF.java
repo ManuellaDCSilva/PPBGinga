@@ -126,6 +126,7 @@ public final class GenericGF {
    * @return sum/difference of a and b
    */
   static int addOrSubtract(int a, int b) {
+	  //System.out.println("a = " + a + ", b= " + b + ", xor= " + (a^b));
     return a ^ b;
   }
 
@@ -171,6 +172,7 @@ public final class GenericGF {
     if (a == 0 || b == 0) {
       return 0;
     }
+    //System.out.println("a = " + a + ", b= " + b + ", multiply= " + (expTable[(logTable[a] + logTable[b]) % (size - 1)]));
     return expTable[(logTable[a] + logTable[b]) % (size - 1)];
   }
 

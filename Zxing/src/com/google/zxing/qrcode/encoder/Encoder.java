@@ -120,13 +120,14 @@ public final class Encoder {
         + mode.getCharacterCountBits(Version.getVersionForNumber(1))
         + dataBits.getSize();
     Version provisionalVersion = chooseVersion(provisionalBitsNeeded, ecLevel);
-
+    
     // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
-
     int bitsNeeded = headerBits.getSize()
         + mode.getCharacterCountBits(provisionalVersion)
         + dataBits.getSize();
-    Version version = chooseVersion(bitsNeeded, ecLevel);
+    //MANUELLA
+    //Version version = chooseVersion(bitsNeeded, ecLevel);
+    Version version = Version.getVersionForNumber(4);
 
     BitArray headerAndDataBits = new BitArray();
     headerAndDataBits.appendBitArray(headerBits);
@@ -449,7 +450,6 @@ public final class Encoder {
     for (int i = 0; i < maxNumDataBytes; ++i) {
       for (BlockPair block : blocks) {
         byte[] dataBytes = block.getDataBytes();
-        System.out.print(dataBytes[i]+",");
         if (i < dataBytes.length) {
           result.appendBits(dataBytes[i], 8);
         }
@@ -485,7 +485,7 @@ public final class Encoder {
     for (int i = 0; i < numDataBytes; i++) {
       toEncode[i] = dataBytes[i] & 0xFF;
       //MANUELLA
-      System.out.println("________generateECBytes: messagePolynomial - " + toEncode[i]);
+      //System.out.println("________generateECBytes: messagePolynomial - " + toEncode[i]);
     }
     new ReedSolomonEncoder(GenericGF.QR_CODE_FIELD_256).encode(toEncode, numEcBytesInBlock);
 
@@ -493,7 +493,7 @@ public final class Encoder {
     for (int i = 0; i < numEcBytesInBlock; i++) {
       ecBytes[i] = (byte) toEncode[numDataBytes + i];
     //MANUELLA
-      System.out.println("________generateECBytes: ecBytes - " + ecBytes[i]);
+      //System.out.println("________generateECBytes: ecBytes - " + ecBytes[i]);
     }
     return ecBytes;
   }
