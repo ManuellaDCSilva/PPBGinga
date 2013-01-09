@@ -31,6 +31,14 @@ public class PolynomialVector {
 		return this.length;
 	}
 	
+	public PolynomialVector clone(){
+		PolynomialVector result = new PolynomialVector(this.length);
+		for(int i=0; i<= this.length; i++){
+			result.setTerm(this.getTerm(i), i);
+		}
+		return result;
+	}
+	
 	public String toString(){
 		String result = "";
 		for(int i=this.length; i>=0; i--){

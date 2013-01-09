@@ -11,15 +11,15 @@ public class Main {
 		Mode mode = new Mode(Mode.ALPHANUMERIC);
 		
 //		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.L), mode, "Testando");
-//		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Testando");
-//		QRCode qr = new QRCode(new Version(4, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Testando");
-//		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.H), mode, "Testando");
+		QRCode qr = new QRCode(new Version(8, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Testando");
+//		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Testando");
+//		QRCode qr = new QRCode(new Version(4, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.H), mode, "Testando");
 //		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.L), mode, "Hello world");
 //		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Hello world");
 //		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Hello world");
 //		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.H), mode, "Hello world");
 //		QRCode qr = new QRCode(new Version(11, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.L), mode, "Casos de teste");
-		QRCode qr = new QRCode(new Version(21, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Casos de teste");
+//		QRCode qr = new QRCode(new Version(21, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Casos de teste");
 //		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Casos de teste");
 //		QRCode qr = new QRCode(new Version(22, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.H), mode, "Casos de teste");
 		Encoder encoder = new Encoder();
