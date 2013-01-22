@@ -108,7 +108,15 @@ public class MatrizImgQR {
          //array de bits
     	int versao = qr.getVersion().getBits();
     	int ecLevel = qr.getErrorCorrectionLevel().getBits();
-         int[][] a = new int[largura][altura];
+    	
+    	//loop para penaliza��o por m�scara
+    	int [][][] matrizAux = new int [8][largura][altura];
+    	int penaliza = 999999;
+    	int penalizaAux = -1;
+    	
+    	for(int usaMask=0; usaMask<8; usaMask++){
+    	
+        int[][] a = new int[largura][altura];
 
          //instanciacao elemento a elemento dos arrays
          int m=0, n=0;
@@ -195,7 +203,7 @@ public class MatrizImgQR {
 
             int z=0;
          //Type Version Information = Tipo de Informacao
-            int[] typeInformationMask = getTypeInformationMask(ecLevel, 0);
+            int[] typeInformationMask = getTypeInformationMask(ecLevel, usaMask);
 
             // *bit 0 a 7
             x=0; y=0;
@@ -245,28 +253,28 @@ public class MatrizImgQR {
         	 System.out.println(vector.getBitWise(itera));
                 for(y=largura-1, x=loop; y>=0 && (x==loop || x==loop-1) && loop>=0; y--){
                     x=loop;
-                    if(UseMaskPatt(x,y,0)==1 && a[x][y]==3) {
+                    if(UseMaskPatt(x,y,usaMask)==1 && a[x][y]==3) {
                         if(vector.getBitWise(itera)==1)
                             a[x][y]=0;
                         else
                             a[x][y]=1;
                         itera++;
                         aI=itera;
-                    } else if(UseMaskPatt(x,y,0)==0 && a[x][y]==3){
+                    } else if(UseMaskPatt(x,y,usaMask)==0 && a[x][y]==3){
                         a[x][y]=vector.getBitWise(itera);
                         itera++;
                         aI=itera;
                     }
                     if(loop>0){
                     x=loop-1;
-                    if(UseMaskPatt(x,y,0)==1 && a[x][y]==3) {
+                    if(UseMaskPatt(x,y,usaMask)==1 && a[x][y]==3) {
                         if(vector.getBitWise(itera)==1)
                             a[x][y]=0;
                         else
                             a[x][y]=1;
                         itera++;
                         aI=itera;
-                    } else if(UseMaskPatt(x,y,0)==0 && a[x][y]==3){
+                    } else if(UseMaskPatt(x,y,usaMask)==0 && a[x][y]==3){
                         a[x][y]=vector.getBitWise(itera);
                         itera++;
                         aI=itera;
@@ -277,28 +285,28 @@ public class MatrizImgQR {
                     loop=loop-2;
                  for(y=0, x=loop; y<=largura-1 && (x==loop || x==loop-1) && loop>=0; y++){
                     x=loop;
-                    if(UseMaskPatt(x,y,0)==1 && a[x][y]==3) {
+                    if(UseMaskPatt(x,y,usaMask)==1 && a[x][y]==3) {
                         if(vector.getBitWise(itera)==1)
                             a[x][y]=0;
                         else
                             a[x][y]=1;
                         itera++;
                         aI=itera;
-                    } else if(UseMaskPatt(x,y,0)==0 && a[x][y]==3){
+                    } else if(UseMaskPatt(x,y,usaMask)==0 && a[x][y]==3){
                         a[x][y]=vector.getBitWise(itera);
                         itera++;
                         aI=itera;
                     }
                     if(loop>0){
                     x=loop-1;
-                    if(UseMaskPatt(x,y,0)==1 && a[x][y]==3) {
+                    if(UseMaskPatt(x,y,usaMask)==1 && a[x][y]==3) {
                         if(vector.getBitWise(itera)==1)
                             a[x][y]=0;
                         else
                             a[x][y]=1;
                         itera++;
                         aI=itera;
-                    } else if(UseMaskPatt(x,y,0)==0 && a[x][y]==3){
+                    } else if(UseMaskPatt(x,y,usaMask)==0 && a[x][y]==3){
                         a[x][y]=vector.getBitWise(itera);
                         itera++;
                         aI=itera;
@@ -312,14 +320,25 @@ public class MatrizImgQR {
          //System.err.println("Debugando em 6... com itera: "+itera+" e aI: "+aI+" e x: "+x+" e y: "+y);
          }while(itera<(vector.getOffset()));
 
+//       System.err.println("[1] Matriz de inteiros como representacao do QR Code gerada com sucesso!");
+//       System.out.println("Ultimo valor do itera: "+itera);
 
-         System.err.println("[1] Matriz de inteiros como representacao do QR Code gerada com sucesso!");
-         System.out.println("Ultimo valor do itera: "+itera);
 
-         System.err.println("[1.5] Testando Penalizar Máscara!");
-         System.out.println("Valor de penalização: "+PenalizeMask.TestMask(a, largura));
+         System.out.println("[] Testando Penalizar Mascara: ["+usaMask+"]");
+//         System.out.println("Valor de penalizacao: "+PenalizeMask.TestMask(a, largura));
+         
+         int bsAux = PenalizeMask.TestMask(a, largura);
+         if(bsAux<penaliza){
+        	 penaliza = bsAux;
+        	 penalizaAux = usaMask;
+             System.out.println("Ultimo valor de penalize: "+penaliza);
+         }
+         
+         matrizAux[usaMask] = a; 
 
-         return a;
+    	}
+
+         return matrizAux[penalizaAux];
      }
 
    private static ImageIcon criarImagem(int matrizAux[][], int zoom) throws IOException {
