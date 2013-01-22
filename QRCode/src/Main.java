@@ -10,10 +10,10 @@ public class Main {
 	public static void main(String[] args) {
 		Mode mode = new Mode(Mode.ALPHANUMERIC);
 		
-//		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.L), mode, "Testando");
-		QRCode qr = new QRCode(new Version(8, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Testando");
-//		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Testando");
-//		QRCode qr = new QRCode(new Version(4, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.H), mode, "Testando");
+//		QRCode qr = new QRCode(new Version(19, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.L), mode, "Testando");
+//		QRCode qr = new QRCode(new Version(15, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Testando");
+//		QRCode qr = new QRCode(new Version(20, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Testando");
+		QRCode qr = new QRCode(new Version(20, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.H), mode, "Testando");
 //		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.L), mode, "Hello world");
 //		QRCode qr = new QRCode(new Version(6, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.M), mode, "Hello world");
 //		QRCode qr = new QRCode(new Version(5, mode), new ErrorCorrectionLevel(ErrorCorrectionLevel.Q), mode, "Hello world");

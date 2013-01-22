@@ -23,6 +23,7 @@ public class Encoder {
 		appendMode(mode, vector);
 		appendData(content, mode, version, vector);
 		terminateVector(version, ECL, vector);
+		System.out.println(version.getMaximunDataCapacityBits()[ECL.getBits()-1] + " : " + (ECL.getBits()-1));
 		PolynomialVector data = ReedSolomon.createMessagePolynomial(version.getMaximunDataCapacityBits()[ECL.getBits()-1], vector);
 		System.out.println("data: " + data.toString());
 		

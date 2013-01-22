@@ -49,12 +49,13 @@ public class ReedSolomon {
 		int length = capacityDataBits / 8;
 
 		System.out.println(length);
-		PolynomialVector r = new PolynomialVector(length - 1);
+		PolynomialVector r = new PolynomialVector(length-1);
 
 		int numOfBits = 0;
 		int index = length - 1;
 
 		while (numOfBits < capacityDataBits) {
+			System.out.println(message.getNBits(numOfBits, 8) + " - " +  r.length() + " - " + index);
 			r.setTerm(message.getNBits(numOfBits, 8), index);
 			index--;
 			numOfBits += 8;
@@ -301,18 +302,26 @@ public class ReedSolomon {
 				result = new PolynomialVector(
 						((numOfBlocks1 + numOfBlocks2) * eccwblocks) - 1);
 
+				System.out.println("result.length() " + result.length());
+				System.out.println("message.length() " + message.length());
+				
 				int counterBlock = (lengthOfBlocks1 * numOfBlocks1)
 						+ (lengthOfBlocks2 * numOfBlocks2) - 1;
 				int counterResult = 0;
+				
+				System.out.println("counterBlock " + counterBlock);
 
 				// Broke the message polynomial into blockCount1 parts and put
 				// it at 'mp'
 				for (int k = 0; k < numOfBlocks1; k++) {
 
+					System.out.println("k: " + k);
 					PolynomialVector mp = new PolynomialVector(
 							lengthOfBlocks1 - 1);
+					System.out.println("  mp: " + mp.length());
 
 					for (int i = 0; i < lengthOfBlocks1; i++) {
+						System.out.println(message.getTerm(counterBlock - i));
 						mp.setTerm(message.getTerm(counterBlock - i),
 								(lengthOfBlocks1 - i - 1));
 					}
