@@ -1,46 +1,94 @@
+/**
+ * The Encoder class implements the data encodation from the QRCode, according
+ * to the ISO/IEC 18004:2000 (E). Yours methods are responsible by the
+ * codification of the input data into a bit stream that contains the mode
+ * indicator, character count indicator, data bit stream and the error
+ * correction code.
+ * 
+ * @author Manuella D. C. Silva (manuellablablau@gmail.com)
+ * @version 0.0.1
+ */
 
 public class Encoder {
 
 	public Encoder() {
 		super();
 	}
-	
+
+	/**
+	 * Perform the codification of QRCode to a bit stream (represented by a
+	 * BitVector) with the mode indicator, character count indicator, data bit
+	 * stream and the error correction code.
+	 * 
+	 * @param qr
+	 *            - the QRCode object containing the input data, Mode, Version
+	 *            and ErrorCorrectionLevel.
+	 * @return a BitVector containing the bit stream codified.
+	 */
 	public BitVector encode(QRCode qr) {
 		Version version = qr.getVersion();
 		Mode mode = qr.getMode();
 		ErrorCorrectionLevel ECL = qr.getErrorCorrectionLevel();
 		String content = qr.getData();
-		
-		int vectorLength = version.getMaximunDataCapacityBits()[ECL.getBits()-1];
-		if (vectorLength % 32 == 0){
+
+		int vectorLength = version.getMaximunDataCapacityBits()[ECL.getBits() - 1];
+		if (vectorLength % 32 == 0) {
 			vectorLength = vectorLength / 32;
-		}else{
+		} else {
 			vectorLength = (vectorLength / 32) + 1;
 		}
-		
+
 		BitVector vector = new BitVector(vectorLength);
 
 		appendMode(mode, vector);
 		appendData(content, mode, version, vector);
 		terminateVector(version, ECL, vector);
-		System.out.println(version.getMaximunDataCapacityBits()[ECL.getBits()-1] + " : " + (ECL.getBits()-1));
-		PolynomialVector data = ReedSolomon.createMessagePolynomial(version.getMaximunDataCapacityBits()[ECL.getBits()-1], vector);
+		System.out
+				.println(version.getMaximunDataCapacityBits()[ECL.getBits() - 1]
+						+ " : " + (ECL.getBits() - 1));
+		PolynomialVector data = ReedSolomon
+				.createMessagePolynomial(
+						version.getMaximunDataCapacityBits()[ECL.getBits() - 1],
+						vector);
 		System.out.println("data: " + data.toString());
-		
-		PolynomialVector ECCW = ReedSolomon.generateErrorCorrectionCode(data, version, ECL);
+
+		PolynomialVector ECCW = ReedSolomon.generateErrorCorrectionCode(data,
+				version, ECL);
 		System.out.println("ECCW: " + ECCW.toString());
-		
-		BitVector finalVector = interweaveErrorCorrectionCode(version, ECL, data, ECCW);
+
+		BitVector finalVector = interleaveErrorCorrectionCode(version, ECL,
+				data, ECCW);
 		reminderBits(version, finalVector);
-				
+
 		return finalVector;
 	}
 
+	/**
+	 * Appends the mode indicator at the bit stream data encodation.
+	 * 
+	 * @param mode
+	 *            - the Mode.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
 	public void appendMode(Mode mode, BitVector vector) {
 		vector.appendBits(mode.getBits(), 4);
 
 	}
 
+	/**
+	 * Appends the input data into the bit stream data encodation according to
+	 * QRCode Mode and Version.
+	 * 
+	 * @param data
+	 *            - a String containing input data.
+	 * @param mode
+	 *            - the Mode.
+	 * @param version
+	 *            - the Version.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
 	public void appendData(String data, Mode mode, Version version,
 			BitVector vector) {
 		vector.appendBits(data.length(),
@@ -64,6 +112,14 @@ public class Encoder {
 
 	}
 
+	/**
+	 * Appends the input data into the Numeric Bytes data encodation.
+	 * 
+	 * @param data
+	 *            - a String containing input data.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
 	public void appendNumericBytes(String data, BitVector vector) {
 		int length = data.length();
 		int i = 0;
@@ -89,6 +145,14 @@ public class Encoder {
 
 	}
 
+	/**
+	 * Appends the input data into the Alphanumeric Bytes data encodation.
+	 * 
+	 * @param data
+	 *            - a String containing input data.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
 	public void appendAlphanumericBytes(String data, BitVector vector) {
 		int length = data.length();
 		int i = 0;
@@ -113,17 +177,45 @@ public class Encoder {
 		}
 	}
 
+	/**
+	 * Appends the input data into the 8 Bit Bytes data encodation.
+	 * 
+	 * @param data
+	 *            - a String containing input data.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
 	public void append8BitBytes(String data, BitVector vector) {
 		// Not implemented yet
 	}
 
+	/**
+	 * Appends the input data into the Kanji Bytes data encodation.
+	 * 
+	 * @param data
+	 *            - a String containing input data.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
 	public void appendKanjiBytes(String data, BitVector vector) {
 		// Not implemented yet
 	}
 
-	public void terminateVector(Version version, ErrorCorrectionLevel ECL, BitVector vector) {
+	/**
+	 * Finish the data encodation with the Terminator sequence and the Padding
+	 * bits to completely fills the capacity of the data bit stream symbols.
+	 * 
+	 * @param version
+	 *            - the Version.
+	 * @param ECL
+	 *            - the ErrorCorrectionLevel.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
+	public void terminateVector(Version version, ErrorCorrectionLevel ECL,
+			BitVector vector) {
 		int numOfBits = vector.getOffset();
-		int capacity = version.getMaximunDataCapacityBits()[ECL.getBits()-1];
+		int capacity = version.getMaximunDataCapacityBits()[ECL.getBits() - 1];
 
 		// Put the terminator (Session 8.4.8 of ISO/IEC 18004)
 		switch (capacity - numOfBits) {
@@ -172,127 +264,179 @@ public class Encoder {
 
 	}
 
-	public BitVector interweaveErrorCorrectionCode(Version version,
+	/**
+	 * Insert the error correction code block interleaved with the data
+	 * encodation.
+	 * 
+	 * @param version
+	 *            - the Version.
+	 * @param ECL
+	 *            - the ErrorCorrectionLevel.
+	 * @param data
+	 *            - the data encodation represented by a PolynomialVector.
+	 * @param ECCWB
+	 *            - the error correction codewords represented by a
+	 *            PolynomialVector.
+	 * @return a bitVector that contains the bit stream with the error
+	 *         correction codewords and data encodation.
+	 */
+	public BitVector interleaveErrorCorrectionCode(Version version,
 			ErrorCorrectionLevel ECL, PolynomialVector data,
 			PolynomialVector ECCWB) {
 
-		int vectorLength = ((data.length()+1 + ECCWB.length()+1) * 8);
-		if (vectorLength % 32 == 0){
+		int vectorLength = ((data.length() + 1 + ECCWB.length() + 1) * 8);
+		if (vectorLength % 32 == 0) {
 			vectorLength = vectorLength / 32;
-		}else{
+		} else {
 			vectorLength = (vectorLength / 32) + 1;
 		}
-		BitVector result = new BitVector(vectorLength+1);//The "+1" gives a clearance to add the remainder bits
-		
-		
-		int numOfBlocks1 = version.getDataCodewordsCharacteristic()[ECL
-				.getBits()-1][0];
-		int numOfBlocks2 = version.getDataCodewordsCharacteristic()[ECL
-				.getBits()-1][2];
+		BitVector result = new BitVector(vectorLength + 1);// The "+1" gives a
+															// clearance to add
+															// the remainder
+															// bits
 
-		
+		int numOfBlocks1 = version.getDataCodewordsCharacteristic()[ECL
+				.getBits() - 1][0];
+		int numOfBlocks2 = version.getDataCodewordsCharacteristic()[ECL
+				.getBits() - 1][2];
+
 		if ((numOfBlocks1 == 1) && (numOfBlocks2 == 0)) {
-			int totalNumOfBlocks = data.length(); 
-			for (int i=totalNumOfBlocks; i>= 0; i--){
+			int totalNumOfBlocks = data.length();
+			for (int i = totalNumOfBlocks; i >= 0; i--) {
 				result.appendBits(data.getTerm(i), 8);
 			}
-			
+
 			totalNumOfBlocks = ECCWB.length();
-			for (int i=totalNumOfBlocks; i>=0; i--){
+			for (int i = totalNumOfBlocks; i >= 0; i--) {
 				result.appendBits(ECCWB.getTerm(i), 8);
 			}
-		}else if (numOfBlocks2 == 0){
-			int totalNumOfBlocks = data.length(); 
-			int lengthOfBlocks = (totalNumOfBlocks/numOfBlocks1)+1;
+		} else if (numOfBlocks2 == 0) {
+			int totalNumOfBlocks = data.length();
+			int lengthOfBlocks = (totalNumOfBlocks / numOfBlocks1) + 1;
 			int counter = 0;
-			
-			
-			for(int i=totalNumOfBlocks; counter < lengthOfBlocks; i--){
-				for(int j = 0; j < numOfBlocks1; j++){
-					result.appendBits(data.getTerm(i-(lengthOfBlocks*j)), 8);
+
+			for (int i = totalNumOfBlocks; counter < lengthOfBlocks; i--) {
+				for (int j = 0; j < numOfBlocks1; j++) {
+					result.appendBits(data.getTerm(i - (lengthOfBlocks * j)), 8);
 				}
 				counter++;
 			}
-			
-			totalNumOfBlocks = ECCWB.length(); 
-			lengthOfBlocks = version.getErrorCorrectionCodePerBlock()[ECL.getBits()-1];
+
+			totalNumOfBlocks = ECCWB.length();
+			lengthOfBlocks = version.getErrorCorrectionCodePerBlock()[ECL
+					.getBits() - 1];
 			System.out.println(lengthOfBlocks);
-			counter=0;
-			for(int i=totalNumOfBlocks; counter < lengthOfBlocks; i--){
-				for(int j = 0; j < numOfBlocks1; j++){
-					result.appendBits(ECCWB.getTerm(i-(lengthOfBlocks*j)), 8);
+			counter = 0;
+			for (int i = totalNumOfBlocks; counter < lengthOfBlocks; i--) {
+				for (int j = 0; j < numOfBlocks1; j++) {
+					result.appendBits(ECCWB.getTerm(i - (lengthOfBlocks * j)),
+							8);
 				}
 				counter++;
 			}
-			
-		}else{
-			int totalNumOfBlocks = data.length(); 
-			int lengthOfBlocks1 = version.getDataCodewordsCharacteristic()[ECL.getBits()-1][1];
-			int lengthOfBlocks2 = version.getDataCodewordsCharacteristic()[ECL.getBits()-1][3];
+
+		} else {
+			int totalNumOfBlocks = data.length();
+			int lengthOfBlocks1 = version.getDataCodewordsCharacteristic()[ECL
+					.getBits() - 1][1];
+			int lengthOfBlocks2 = version.getDataCodewordsCharacteristic()[ECL
+					.getBits() - 1][3];
 			int counter = 0;
-			
-			System.out.println("totalNumOfBlocks: "+totalNumOfBlocks);
-			System.out.println("lengthOfBlocks: "+lengthOfBlocks1);
-			
-			for(int i=totalNumOfBlocks; counter < lengthOfBlocks1; i--){
-				for(int j = 0; j < numOfBlocks1; j++){
-					System.out.println((i-(lengthOfBlocks1*j))+" - " + data.getTerm(i-(lengthOfBlocks1*j)));
-					result.appendBits(data.getTerm(i-(lengthOfBlocks1*j)), 8);
+
+			System.out.println("totalNumOfBlocks: " + totalNumOfBlocks);
+			System.out.println("lengthOfBlocks: " + lengthOfBlocks1);
+
+			for (int i = totalNumOfBlocks; counter < lengthOfBlocks1; i--) {
+				for (int j = 0; j < numOfBlocks1; j++) {
+					System.out.println((i - (lengthOfBlocks1 * j)) + " - "
+							+ data.getTerm(i - (lengthOfBlocks1 * j)));
+					result.appendBits(data.getTerm(i - (lengthOfBlocks1 * j)),
+							8);
 				}
-				for(int j = 0; j < numOfBlocks2; j++){
-					System.out.println((i-(lengthOfBlocks1*numOfBlocks1)-(lengthOfBlocks2*j))+" "+(i-(lengthOfBlocks2*j))+" - " + data.getTerm(i-(lengthOfBlocks1*numOfBlocks1)-(lengthOfBlocks2*j)));
-					result.appendBits(data.getTerm(i-(lengthOfBlocks1*numOfBlocks1)-(lengthOfBlocks2*j)), 8);
+				for (int j = 0; j < numOfBlocks2; j++) {
+					System.out
+							.println((i - (lengthOfBlocks1 * numOfBlocks1) - (lengthOfBlocks2 * j))
+									+ " "
+									+ (i - (lengthOfBlocks2 * j))
+									+ " - "
+									+ data.getTerm(i
+											- (lengthOfBlocks1 * numOfBlocks1)
+											- (lengthOfBlocks2 * j)));
+					result.appendBits(
+							data.getTerm(i - (lengthOfBlocks1 * numOfBlocks1)
+									- (lengthOfBlocks2 * j)), 8);
 				}
 				counter++;
 				System.out.println();
 			}
-			
-			for(int i=totalNumOfBlocks; counter < lengthOfBlocks2; i--){
-				for(int j = 0; j < numOfBlocks2; j++){
-					System.out.println((lengthOfBlocks2 -(counter-lengthOfBlocks1+1))+" - " + (i-lengthOfBlocks1*(numOfBlocks1+1)-lengthOfBlocks2*(j+1)+counter+1)+" - "+data.getTerm(i-lengthOfBlocks1*(numOfBlocks1+1)-lengthOfBlocks2*(j+1)+counter+1));
-					result.appendBits(data.getTerm(i-lengthOfBlocks1*(numOfBlocks1+1)-lengthOfBlocks2*(j+1)+counter+1), 8);
+
+			for (int i = totalNumOfBlocks; counter < lengthOfBlocks2; i--) {
+				for (int j = 0; j < numOfBlocks2; j++) {
+					System.out.println((lengthOfBlocks2 - (counter
+							- lengthOfBlocks1 + 1))
+							+ " - "
+							+ (i - lengthOfBlocks1 * (numOfBlocks1 + 1)
+									- lengthOfBlocks2 * (j + 1) + counter + 1)
+							+ " - "
+							+ data.getTerm(i - lengthOfBlocks1
+									* (numOfBlocks1 + 1) - lengthOfBlocks2
+									* (j + 1) + counter + 1));
+					result.appendBits(
+							data.getTerm(i - lengthOfBlocks1
+									* (numOfBlocks1 + 1) - lengthOfBlocks2
+									* (j + 1) + counter + 1), 8);
 				}
 				counter++;
 			}
-						
-			
+
 			System.out.println();
-			totalNumOfBlocks = ECCWB.length(); 
-			int lengthOfBlocks = version.getErrorCorrectionCodePerBlock()[ECL.getBits()-1];
+			totalNumOfBlocks = ECCWB.length();
+			int lengthOfBlocks = version.getErrorCorrectionCodePerBlock()[ECL
+					.getBits() - 1];
 			System.out.println("lengthOfBlocks: " + lengthOfBlocks);
 			System.out.println();
-			counter=0;
-			for(int i=totalNumOfBlocks; counter < lengthOfBlocks; i--){
-				for(int j = 0; j < numOfBlocks1+numOfBlocks2; j++){
-					System.out.println((i-(lengthOfBlocks*j))+" - "+ECCWB.getTerm(i-(lengthOfBlocks*j)));
-					result.appendBits(ECCWB.getTerm(i-(lengthOfBlocks*j)), 8);
+			counter = 0;
+			for (int i = totalNumOfBlocks; counter < lengthOfBlocks; i--) {
+				for (int j = 0; j < numOfBlocks1 + numOfBlocks2; j++) {
+					System.out.println((i - (lengthOfBlocks * j)) + " - "
+							+ ECCWB.getTerm(i - (lengthOfBlocks * j)));
+					result.appendBits(ECCWB.getTerm(i - (lengthOfBlocks * j)),
+							8);
 				}
 				System.out.println();
 				counter++;
 			}
-			
+
 		}
 
 		return result;
 	}
 
-	public void reminderBits(Version version, BitVector vector){
+	/**
+	 * Insert the Remainder Bits according to the QRCode version.
+	 * 
+	 * @param version
+	 *            - a int representing the version number.
+	 * @param vector
+	 *            - the BitVector that contains the bit stream.
+	 */
+	public void reminderBits(Version version, BitVector vector) {
 		vector.appendBits(0, version.getRemainderBit());
 	}
-	
+
 	/**
 	 * This methods return the ASCII value of character according with the
-	 * QRCode table. And -1 in case of error.
+	 * QRCode table.
 	 * 
-	 * @param caracter
-	 *            char
-	 * @return the ASCII value of character according with the QRCode table. And
-	 *         -1 in case of error.
+	 * @param character
+	 *            - a char that indicates the input character.
+	 * @return a int representing the ASCII value of character according with
+	 *         the QRCode table. And -1 in case of error.
 	 */
-	public int convertToASCIIValue(char caracter) {
+	public int convertToASCIIValue(char character) {
 		int result = -1;
 
-		switch (caracter) {
+		switch (character) {
 		case '0':
 			result = 0;
 			break;
