@@ -1,11 +1,20 @@
+/**
+ * The Version class implements the object that represents the Version from the
+ * QRCode. In addition, this class contains a set of information associated with
+ * QRCode's version..
+ * 
+ * @author Manuella D. C. Silva (manuellablablau@gmail.com)
+ * @version 0.0.1
+ */
+
 public class Version {
 
 	/**
 	 * Number of remainder bits added at final of blocks
 	 */
-	public static final int[] remainderBits = { 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0,
-			0, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3,
-			0, 0, 0, 0, 0, 0 };
+	public static final int[] remainderBits = { 0, 7, 7, 7, 7, 7, 0, 0, 0, 0,
+			0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3,
+			3, 3, 0, 0, 0, 0, 0, 0 };
 
 	/**
 	 * Number of codewords (blocks from 8 bits) per version
@@ -245,7 +254,7 @@ public class Version {
 			{ 30, 28, 30, 30 } };
 
 	public final int bits;
-	
+
 	public final int remainderBit;
 
 	public final int[] maximunDataCapacityBits;
@@ -256,9 +265,17 @@ public class Version {
 
 	public final int[] errorCorrectioCodeWordsCharacteristic;
 
+	/**
+	 * Constructs a Version according to QRCode version number and the Mode.
+	 * 
+	 * @param number
+	 *            - a int representing the QRCode version number.
+	 * @param mode
+	 *            - the Mode.
+	 */
 	public Version(int number, Mode mode) {
 		this.bits = number;
-		this.remainderBit = remainderBits[number-1];
+		this.remainderBit = remainderBits[number - 1];
 		this.maximunDataCapacityBits = dataCapacityBits[number - 1];
 		this.dataCodewordsCharacteristic = numberOfDataCodewords[number - 1];
 		this.errorCorrectioCodeWordsCharacteristic = numberofErrorCorrectionCodewords[number - 1];
@@ -281,36 +298,79 @@ public class Version {
 		}
 	}
 
-	
-	
+	/**
+	 * Returns the Remainder Bit to this Version.
+	 * 
+	 * @return a int representing the remainder bit.
+	 */
 	public int getRemainderBit() {
 		return remainderBit;
 	}
 
+	/**
+	 * Returns a int vector with all the Remainder Bits.
+	 * 
+	 * @return a int vector with the Remainder Bits.
+	 */
 	public static int[] getRemainderbits() {
 		return remainderBits;
 	}
 
+	/**
+	 * Returns a number representing the Version.
+	 * 
+	 * @return a int representing the version.
+	 */
 	public int getBits() {
 		return bits;
 	}
 
+	/**
+	 * Returns the maximun capacity of data bits per version.
+	 * 
+	 * @return a int vector containing the maximun capacity of data bits per
+	 *         version.
+	 */
 	public int[] getMaximunDataCapacityBits() {
 		return maximunDataCapacityBits;
 	}
 
+	/**
+	 * Returns the maximun capacity of characters per version.
+	 * 
+	 * @return a int vector containing the maximun capacity of characters per
+	 *         version.
+	 */
 	public int[] getMaximunDataCapacityCharacters() {
 		return maximunDataCapacityCharacters;
 	}
 
+	/**
+	 * Returns the number of Error Correction code blocks information for each
+	 * version and ECLevel.
+	 * 
+	 * @return a int vector.
+	 */
 	public int[] getErrorCorrectionCodePerBlock() {
 		return errorCorrectioCodeWordsCharacteristic;
 	}
 
+	/**
+	 * Returns the Error Correction codewords information characteristics for
+	 * each ECLevel.
+	 * 
+	 * @return a int bidimensional vector.
+	 */
 	public int[][] getDataCodewordsCharacteristic() {
 		return dataCodewordsCharacteristic;
 	}
 
+	/**
+	 * Returns the Error Correction codewords information characteristics for
+	 * each ECLevel.
+	 * 
+	 * @return a int vector.
+	 */
 	public int[] getErrorCorrectioCodeWordsCharacteristic() {
 		return errorCorrectioCodeWordsCharacteristic;
 	}

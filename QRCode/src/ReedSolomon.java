@@ -1,3 +1,10 @@
+/**
+ * The ReedSolomon class contains necessary methods to implements the algorithm with this name.
+ * The methods reproduce the operations of the ReedSolomon Algorithm using the variables logTable and antilogTable to access the values off Galois Field (256) arithmetics.
+ * 
+ * @author Manuella D. C. Silva (manuellablablau@gmail.com)
+ * @version 0.0.1
+ */
 
 public class ReedSolomon {
 
@@ -43,6 +50,13 @@ public class ReedSolomon {
 			215, 79, 174, 213, 233, 230, 231, 173, 232, 116, 214, 244, 234,
 			168, 80, 88, 175 };
 
+	/**
+	 * Creates a PolynomialVector representing the bit stream, each group of 8 bits will be represented like one element at the polynomial.
+	 * 
+	 * @param capacityDataBits - a int representing the length of PolynomialVector must be.
+	 * @param message - a BitVector containing the bit stream.
+	 * @return a PolynomialVector containing the message represented by a polynomial.
+	 */
 	public static PolynomialVector createMessagePolynomial(
 			int capacityDataBits, BitVector message) {
 
@@ -65,6 +79,13 @@ public class ReedSolomon {
 		return r;
 	}
 
+	/**
+	 * Creates a Polynomialvector, called generator polynomial, that will be used to calculate the error correction code.
+	 * It's a polynomial generated as a sequence of 'n' multiplications from a (a0x1 + ajx0) - where j = 0, 1, 2, ..., n -  by other polynomial, initially (a0x1 + a0x0) and then by the result.
+	 * 
+	 * @param ECCWBlocks - a int representing 'n'.
+	 * @return a Polynomial vector containing the generator polynomial.
+	 */
 	public static PolynomialVector createGeneratorPolynomial(int ECCWBlocks) {
 
 		PolynomialVector first = new PolynomialVector(1);
@@ -100,6 +121,14 @@ public class ReedSolomon {
 
 	}
 
+	/**
+	 * Generates a Polynomial containing the Error Correction Code. Each coefficient will represent a error correction codeword block, with 8-bits
+	 * 
+	 * @param message - a PolynomialVector representing the bit stream.
+	 * @param version - the Version.
+	 * @param ECL - the ErrorCorrectionLevel.
+	 * @return a PolynomialVector containing the Error Correction Code codewords.
+	 */
 	public static PolynomialVector generateErrorCorrectionCode(
 			PolynomialVector message, Version version, ErrorCorrectionLevel ECL) {
 
@@ -463,6 +492,13 @@ public class ReedSolomon {
 		}
 	}
 
+	/**
+	 * Multiply two PolynomialVector with distinct length.
+	 * 
+	 * @param p - the first PolynomialVector.
+	 * @param q - the second PolynomialVector.
+	 * @return a PolynomialVector containing the result.
+	 */
 	public static PolynomialVector multiplyPolynomials(PolynomialVector p,
 			PolynomialVector q) {
 
@@ -533,6 +569,13 @@ public class ReedSolomon {
 		return r;
 	}
 
+	/**
+	 * Multiply a PolynomialVector by a value.
+	 * 
+	 * @param p - the PolynomialVector.
+	 * @param coefficient - a int.
+	 * @return a PolynomialVector containing the result.
+	 */
 	public static PolynomialVector multiplyPolynomialByCoefficient(
 			PolynomialVector p, int coefficient) {
 		int pLength = p.length();
@@ -557,6 +600,13 @@ public class ReedSolomon {
 
 	}
 
+	/**
+	 * Executes a eXclusives OR operation between two PolynomialVector.
+	 * 
+	 * @param p - the first PolynomialVector.
+	 * @param q - the second PolynomialVector.
+	 * @return a PolynomialVector containing the result.
+	 */
 	public static PolynomialVector xorPolynomials(PolynomialVector p,
 			PolynomialVector q) {
 		try {
@@ -599,6 +649,12 @@ public class ReedSolomon {
 
 	}
 
+	/**
+	 * Converts a PolynomialVector from a alpha notation to a integer notation using the logTable.
+	 * 
+	 * @param p - the PolynomialVector.
+	 * @return the result PolynomialVector.
+	 */
 	public static PolynomialVector convertoToIntegerNotation(PolynomialVector p) {
 		int pLength = p.length();
 		PolynomialVector r = new PolynomialVector(pLength);
@@ -614,6 +670,12 @@ public class ReedSolomon {
 
 	}
 
+	/**
+	 * Converts a PolynomialVector from a integer notation to a alpha notation using the antilogTable.
+	 * 
+	 * @param p - the PolynomialVector.
+	 * @return the result PolynomialVector.
+	 */
 	public static PolynomialVector convertoToAlphaNotation(PolynomialVector p) {
 		int pLength = p.length();
 
@@ -633,6 +695,12 @@ public class ReedSolomon {
 
 	}
 
+	/**
+	 * Returns a PolynomialVector without their zero terms, i.e., without their null coefficients.
+	 * 
+	 * @param p - the PolynomialVector.
+	 * @return the result PolynomialVector.
+	 */
 	public static PolynomialVector getNonZeroTerms(PolynomialVector p) {
 		int pLength = p.length();
 		int counter = 0;
@@ -658,6 +726,12 @@ public class ReedSolomon {
 		}
 	}
 
+	/**
+	 * Returns a PolynomialVector without their first term if the first coefficient is zero.
+	 * 
+	 * @param p - the PolynomialVector.
+	 * @return the result PolynomialVector.
+	 */
 	public static PolynomialVector getWithoutFirstNonZeroTerms(
 			PolynomialVector p) {
 		try {
@@ -685,12 +759,24 @@ public class ReedSolomon {
 
 	}
 
-	public static int getLogTable(int exponent) {
-		return logTable[exponent];
+	/**
+	 * Returns the element with the index.
+	 * 
+	 * @param index - a int representing the position at logTable.
+	 * @return a int with the respective element.
+	 */
+	public static int getLogTable(int index) {
+		return logTable[index];
 	}
 
-	public static int getAntilogTable(int integer) {
-		return antilogTable[integer];
+	/**
+	 * Returns the element with the index.
+	 * 
+	 * @param index - a int representing the possition at antilogTable.
+	 * @return a int with the respective element.
+	 */
+	public static int getAntilogTable(int index) {
+		return antilogTable[index];
 	}
 
 }

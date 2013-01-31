@@ -12,7 +12,7 @@ public class BitVector {
 	private int offset;
 
 	/**
-	 * Constructs a empty BitVector and with initial capacity specified by the
+	 * Constructs a empty BitVector with initial capacity specified by the
 	 * length argument.
 	 * 
 	 * @param length
@@ -24,7 +24,7 @@ public class BitVector {
 	}
 
 	/**
-	 * Return the vector of the object.
+	 * Returns the vector of the object.
 	 * 
 	 * @return a int[] representing the vector.
 	 */
