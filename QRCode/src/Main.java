@@ -230,8 +230,7 @@ public class Main {
 		aux = (size & 0x1F);
 		bits[index] |= 1 << aux;
 		System.out.println("Index="+index+", Aux="+aux);
-		System.out.println("Passo 2 - bits.length="+bits.length+", bits[0]="+bits[0]);*/
-		
+		System.out.println("Passo 2 - bits.length="+bits.length+", bits[0]="+bits[0]);*/		
 		
 	}
 

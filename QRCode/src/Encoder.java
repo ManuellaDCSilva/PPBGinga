@@ -186,7 +186,13 @@ public class Encoder {
 	 *            - the BitVector that contains the bit stream.
 	 */
 	public void append8BitBytes(String data, BitVector vector) {
-		// Not implemented yet
+		int length = data.length();
+		int i = 0;
+		while (i < length) {
+			int character = data.charAt(i);
+			vector.appendBits(character, 8);
+			i++;			
+		}
 	}
 
 	/**
